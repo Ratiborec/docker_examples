@@ -1,0 +1,57 @@
+version: "2.3"
+services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    volumes:
+      - confd:/etc/nginx/conf.d
+    ports:
+      - 80:80
+    networks:
+      custom_bridge:
+        ipv4_address: 192.10.0.2
+    logging:
+      driver: journald
+  jenkins:
+    image: jenkins
+    container_name: jenkins
+    volumes:
+      - jenkins_data:/var/jenkins_home   
+    ports:
+      - 8080:8080
+    networks:
+      custom_bridge:
+        ipv4_address: 192.10.0.3
+    logging:
+      driver: journald
+    cpus: '0.35'
+    mem_limit: 500000000
+
+  nexus:
+    image: sonatype/nexus3
+    container_name: nexus
+    volumes:
+      - nexus_data:/nexus-data
+    ports:
+      - 8081:8081
+    networks:
+      custom_bridge:
+        ipv4_address: 192.10.0.4
+    logging:
+      driver: journald
+    cpus: '0.25'
+    mem_limit: 900000000
+
+networks:
+  custom_bridge:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.10.0.0/24
+          gateway: 192.10.0.1
+
+volumes:
+  confd:
+  jenkins_data:
+  nexus_data:

@@ -1,0 +1,21 @@
+version: "3.6"
+services:
+  nginx:
+    image: nginx
+    container_name: nginx_task2.1
+    volumes:
+      - swarm_nginx:/etc/nginx/conf.d
+    ports:
+      - 80:80
+    deploy:
+      replicas: 1  
+  jenkins:
+    image: jenkins
+    container_name: jenkins_task2.1
+    ports:
+      - 8080:8080
+    deploy:
+     replicas: 2
+
+volumes:
+  swarm_nginx:
